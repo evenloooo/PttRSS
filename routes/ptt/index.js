@@ -54,6 +54,7 @@ function generateRSS(data, fetchContent) {
   if (fetchContent === false) {
     return new Promise((resolve, reject) => {
       articles.forEach((articleMeta) => {
+        // console.log(articleMeta);
         feed.item(articleMeta);
       });
       resolve(feed);
@@ -99,23 +100,23 @@ router
     }
 
     // Get from cache first
-    const obj = cache.get(cachedKey);
-    if (obj) {
-      return generateRSS({
-        siteUrl: siteUrl,
-        board: board,
-        articles: obj.articles,
-        titleKeywords: titleKeywords,
-        push: push,
-      }, fetchContent)
-      .then((feed) => {
-        debug('cached board: %s', board, cachedKey);
-        res.set('Content-Type', 'text/xml');
-        return res.send(feed.xml());
-      }).catch((err) => {
-        return next(err);
-      });
-    }
+    // const obj = cache.get(cachedKey);
+    // if (obj) {
+    //   return generateRSS({
+    //     siteUrl: siteUrl,
+    //     board: board,
+    //     articles: obj.articles,
+    //     titleKeywords: titleKeywords,
+    //     push: push,
+    //   }, fetchContent)
+    //   .then((feed) => {
+    //     debug('cached board: %s', board, cachedKey);
+    //     res.set('Content-Type', 'text/xml');
+    //     return res.send(feed.xml());
+    //   }).catch((err) => {
+    //     return next(err);
+    //   });
+    // }
 
     let response = function response(articles) {
       debug('set cache board: %s', board, cachedKey);
@@ -136,7 +137,7 @@ router
     let articles = [];
     let getArticles = function(data) {
       if (!data.articles) throw Error('Fetch failed');
-
+      // console.log(data);
       articles = articles.concat(data.articles);
       if (articles.length < minArticleCount) {
         debug('get more articles, current count: %s', articles.length);
